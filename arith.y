@@ -37,7 +37,7 @@ BINARY_TREE create_node(int,int,BINARY_TREE,BINARY_TREE);
     BINARY_TREE  tVal;
 }
 
-%token<iVal> NUMBER PLUS TIMES BRA KET NEWLINE EXPR TERM
+%token<iVal> NUMBER PLUS TIMES BRA KET NEWLINE EXPR TERM MINUS DIVIDE
 %type<tVal>  line expr term factor
 %%
 lines    : line lines
@@ -52,11 +52,15 @@ line     : expr NEWLINE
          ; 
 expr     : expr PLUS term
            { $$ = create_node(NOTHING,PLUS,$1,$3); }
+		 | expr MINUS term
+           { $$ = create_node(NOTHING,MINUS,$1,$3); }
          | term
            { $$ = create_node(NOTHING,EXPR,$1,NULL); }
          ;
 term     : term TIMES  factor
            { $$ = create_node(NOTHING,TIMES,$1,$3); }
+		 | term DIVIDE  factor
+           { $$ = create_node(NOTHING,DIVIDE,$1,$3); }
          | factor
            { $$ = create_node(NOTHING,TERM,$1,NULL); }
          ;
@@ -87,6 +91,10 @@ int evaluate(BINARY_TREE t)
                 return(evaluate(t->first));
             case(PLUS) :
                 return((evaluate(t->first)) + (evaluate(t->second)));
+			case(MINUS) :
+                return((evaluate(t->first)) - (evaluate(t->second)));
+			case(DIVIDE) :
+                return((evaluate(t->first)) / (evaluate(t->second)));
             case(EXPR) :
                 return(evaluate(t->first));
             case(TIMES) :

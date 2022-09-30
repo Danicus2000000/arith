@@ -9,6 +9,8 @@ number          {digit}+
 "*"             return(TIMES);
 "("             return(BRA);
 ")"             return(KET);
+"-"				return(MINUS);
+"/"				return(DIVIDE);
 {number}        {
                   /* call the library function to convert ascii to int */
                   /* assign the integer value of the text in yytext to the iVal part of the yylVal object */
